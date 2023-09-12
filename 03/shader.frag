@@ -11,6 +11,7 @@ uniform float u_time;
 vec3 colorA = vec3(0.96, 0.18, 0.8);
 vec3 colorB = vec3(1.000,0.833,0.224);
 
+// https://thebookofshaders.com/10/
 float random (vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*
@@ -18,22 +19,21 @@ float random (vec2 st) {
 }
 
 vec3 rgb2hsb( in vec3 c ){
-    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    vec4 p = mix(vec4(c.bg, K.wz),
-                 vec4(c.gb, K.xy),
-                 step(c.b, c.g));
-    vec4 q = mix(vec4(p.xyw, c.r),
-                 vec4(c.r, p.yzx),
-                 step(p.x, c.r));
-    float d = q.x - min(q.w, q.y);
-    float e = 1.0e-10;
-    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)),
-                d / (q.x + e),
-                q.x);
+  vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+  vec4 p = mix(vec4(c.bg, K.wz),
+                vec4(c.gb, K.xy),
+                step(c.b, c.g));
+  vec4 q = mix(vec4(p.xyw, c.r),
+                vec4(c.r, p.yzx),
+                step(p.x, c.r));
+  float d = q.x - min(q.w, q.y);
+  float e = 1.0e-10;
+  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)),
+              d / (q.x + e),
+              q.x);
 }
 
 void main(){
-  vec2 m = u_mouse.xy/u_resolution;
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
   vec2 heightAmount = res * 30.0;
