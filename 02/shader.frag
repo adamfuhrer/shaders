@@ -35,34 +35,34 @@ void main() {
     1.0
   );
 
-  gl_FragColor = vec4(
-    cos(m.x * st.y* t  *2.0),
-    sin(m.y * st.y * t ),
-    cos(m.x * st.x * t ),
-    1.0
-  );
+  // gl_FragColor = vec4(
+  //   cos(m.x * st.y* t  *2.0),
+  //   sin(m.y * st.y * t ),
+  //   cos(m.x * st.x * t ),
+  //   1.0
+  // );
 
-	gl_FragColor = vec4(
-    sin(m.y * st.x + m.x * st.y )* t,
-    sin(m.y * st.x + m.x),
-    sin(m.y * st.x + m.x * st.y* t / 3.0)* t,
-    1.0
-  );
+	// gl_FragColor = vec4(
+  //   sin(m.y * st.x + m.x * st.y )* t,
+  //   sin(m.y * st.x + m.x),
+  //   sin(m.y * st.x + m.x * st.y* t / 3.0)* t,
+  //   1.0
+  // );
 
-  // Figuring out where white is, bottom left is 0.0, 0.0, middle is 1.0, 1.0, (i think)
-	gl_FragColor = vec4(
-    m.x,
-    m.x ,
-    m.x ,
-    1.0
-  );
+  // // Figuring out where white is, bottom left is 0.0, 0.0, middle is 1.0, 1.0, (i think)
+	// gl_FragColor = vec4(
+  //   m.x,
+  //   m.x ,
+  //   m.x ,
+  //   1.0
+  // );
 
-  // lasers
-  gl_FragColor = vec4(
-    tan(m.x * st.x + m.x * st.y) / 110.0,
-    tan(m.x * st.x + m.y * st.y) / 112.0,
-    tan(m.x * st.x + m.y * st.y) / 112.0,
-    1.0
-  );
+  // // lasers
+  // gl_FragColor = vec4(
+  //   tan(m.x * st.x + m.x * st.y) / 110.0,
+  //   tan(m.x * st.x + m.y * st.y) / 112.0,
+  //   tan(m.x * st.x + m.y * st.y) / 112.0,
+  //   1.0
+  // );
 
 }
