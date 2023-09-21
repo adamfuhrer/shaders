@@ -33,7 +33,6 @@
     }
 
     function handleMove(event) {
-      event.preventDefault();
       if(event.touches) {
         const rect = canvas.getBoundingClientRect();
         const touch = event.touches[0];
@@ -41,6 +40,8 @@
         const y = (touch.clientY - rect.top) * dpr;
         glslCanvas.setUniform('u_mouse', x, y);
       }
+      event.preventDefault();
+
     }
 
     canvas.addEventListener('mousemove', handleMove, { passive: false });
