@@ -6,14 +6,12 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-// vec3 colorA = vec3(0.16);
-// vec3 colorB = vec3(0.64, 0.78, 0.26);
 
-// vec3 colorA = vec3(0.16, 0.01, 0.01);
-// vec3 colorB = vec3(0.74, 0.13, 0.95);
+vec3 colorA = vec3(0.37, 0.69, 0.55);
+vec3 colorB = vec3(0.65, 0.47, 0.47);
 
-vec3 colorA = vec3(0.39, 0.07, 0.61);
-vec3 colorB = vec3(0.85);
+// vec3 colorA = vec3(0.39, 0.62, 0.63);
+// vec3 colorB = vec3(0.73, 0.04, 0.04);
 
 float random (vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
@@ -34,26 +32,26 @@ vec3 rgb2hsb( in vec3 c ){
               q.x);
 }
 
-// purple rain
+// fire
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = (res + 1.0) * 300.0;
+  vec2 heightAmount = (res + 1.0) * 60.0;
   vec2 heightAmountInteger = floor(heightAmount) ;
-  float random = random(vec2(heightAmountInteger.x ));
+  float random = random(vec2(tan(heightAmountInteger.x + heightAmountInteger.y) ));
 
-  vec3 color = vec3(1.0);
+  vec3 color = vec3(0.0);
   vec3 pct = vec3(heightAmountInteger.x);
   // pct.r = abs(atan(res.y * res.x + u_time * random / 1.5));
   // pct.g = abs(atan(res.y * res.x+ u_time * random / 1.5));
   
   // pct.b = abs(atan(res.x * res.x + u_time * random / 1.5));
   // pct.r = abs(acos(res.y * random / 10.5));
-  pct.g = abs(tan(res.y + 10.0  + u_time * 1.5 * random + 100.0 ));
+  pct.g = abs(tan(res.y + (res.x * 12.0) + 10.0 + u_time * 3.5 * random + 400.0 ));
   // pct.b = abs(atan( res.y / res.x + u_time * 12.0* random /10.5));
 
   color = mix(colorA, colorB, pct);
-  vec3 newColor = rgb2hsb(color);
+  // vec3 newColor = rgb2hsb(color);
 
-  gl_FragColor = vec4(newColor,1.0);
+  gl_FragColor = vec4(color,1.0);
 }

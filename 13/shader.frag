@@ -8,8 +8,12 @@ uniform float u_time;
 
 // vec3 colorA = vec3(0.16);
 // vec3 colorB = vec3(0.64, 0.78, 0.26);
-vec3 colorA = vec3(0.16);
-vec3 colorB = vec3(0.64, 0.78, 0.26);
+
+// vec3 colorA = vec3(0.16, 0.01, 0.01);
+// vec3 colorB = vec3(0.74, 0.13, 0.95);
+
+vec3 colorA = vec3(0.39, 0.07, 0.61);
+vec3 colorB = vec3(0.85);
 
 float random (vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
@@ -30,25 +34,23 @@ vec3 rgb2hsb( in vec3 c ){
               q.x);
 }
 
-
-// fading squares
+// purple rain
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = res * 200.0;
-  // vec2 heightAmountInteger = heightAmount;
-  vec2 heightAmountInteger = floor(heightAmount);
-  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 10.0));
+  vec2 heightAmount = (res + 1.0) * 300.0;
+  vec2 heightAmountInteger = floor(heightAmount) ;
+  float random = random(vec2(heightAmountInteger.x ));
 
-  vec3 color = vec3(0.28, 0.01, 0.01);
-  vec3 pct = vec3(res.x);
+  vec3 color = vec3(1.0);
+  vec3 pct = vec3(heightAmountInteger.x);
   // pct.r = abs(atan(res.y * res.x + u_time * random / 1.5));
   // pct.g = abs(atan(res.y * res.x+ u_time * random / 1.5));
+  
   // pct.b = abs(atan(res.x * res.x + u_time * random / 1.5));
-
-  pct.r = abs(acos(res.y / res.x *res.y *res.y * res.x  + u_time * random / 10.5));
-  pct.g = abs(asin(res.y / res.x * res.y *res.y * res.x + u_time * random / 14.5));
-  pct.b = abs(atan( res.y / res.x *  res.y + u_time * random /10.5));
+  // pct.r = abs(acos(res.y * random / 10.5));
+  pct.g = abs(tan(res.y + 10.0  + u_time * 1.5 * random + 100.0 ));
+  // pct.b = abs(atan( res.y / res.x + u_time * 12.0* random /10.5));
 
   color = mix(colorA, colorB, pct);
   vec3 newColor = rgb2hsb(color);

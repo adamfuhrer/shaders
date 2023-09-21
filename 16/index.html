@@ -1,0 +1,37 @@
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>WebGL</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+  <canvas class="glslCanvas" data-fragment-url="/16/shader.frag"></canvas>
+  <script>
+    const canvas = document.querySelector('.glslCanvas');
+    const glslCanvas = new GlslCanvas(canvas);
+    const dpr = window.devicePixelRatio || 1;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      glslCanvas.setUniform('u_resolution', canvas.width, canvas.height);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+  </script>
+</body>
+</html>
