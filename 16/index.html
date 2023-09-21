@@ -44,8 +44,8 @@
 
     }
 
-    canvas.addEventListener('mousemove', handleMove, { passive: false });
-    canvas.addEventListener('touchmove', handleMove, { passive: false });
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
     window.addEventListener('resize', resizeCanvas);
 
     resizeCanvas();
