@@ -40,8 +40,8 @@
       }
     }
 
-    canvas.addEventListener('mousemove', handleMove);
-    canvas.addEventListener('touchmove', handleMove);
+    canvas.addEventListener('mousemove', handleMove, { passive: false });
+    canvas.addEventListener('touchmove', handleMove, { passive: false });
     window.addEventListener('resize', resizeCanvas);
 
     resizeCanvas();
