@@ -17,7 +17,7 @@ vec3 hsl2rgb(vec3 hsl) {
     return hsl.z * mix(k.xxx, clamp(p - k.xxx, 0.0, 1.0), hsl.y);
 }
 
-// rainbow (touch gestures)
+// rainbow (touch gestures + mouse gestures)
 void main(){
 	vec2 res = gl_FragCoord.xy / u_pointer / 2.0;
   
