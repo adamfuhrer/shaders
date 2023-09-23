@@ -26,9 +26,9 @@ void main(){
   float random = random(vec2(heightAmountInteger.x * heightAmountInteger.y ));
 
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
-  float hue = pow(st.y, 4.5);
+  float hue = pow(st.y, 5.0);
   
-  vec3 hslColor = vec3(hue / 0.3  + random + cos(u_time / 1.5), 0.9 , 0.9 );
+  vec3 hslColor = vec3(hue / 0.3  + random + sin(u_time), 0.9 , 0.9 );
   vec3 rgbColor = hsl2rgb(hslColor);
 
   gl_FragColor = vec4(rgbColor, 1.0);
