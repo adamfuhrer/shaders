@@ -17,7 +17,7 @@ vec3 hsl2rgb(vec3 hsl) {
     return hsl.z * mix(k.xxx, clamp(p - k.xxx, 0.0, 1.0), hsl.y);
 }
 
-// rainbow (touch gestures + mouse)
+// rainbow (horizontal)
 void main(){
 	vec2 res = gl_FragCoord.xy / u_pointer / 2.0;
   
@@ -26,9 +26,9 @@ void main(){
   float random = random(vec2(heightAmountInteger.x * heightAmountInteger.y ));
 
   vec2 st = gl_FragCoord.xy / u_resolution.xy;
-  float hue = pow(st.y, 5.0);
-  
-  vec3 hslColor = vec3(hue / 0.3  + random + sin(u_time), 0.9 , 0.9 );
+  float hue = pow(st.x, 4.0);
+
+  vec3 hslColor = vec3(hue   + pow(random / 3.0,  st.x) + sin(u_time / 1.3), 0.9 , 0.9 );
   vec3 rgbColor = hsl2rgb(hslColor);
 
   gl_FragColor = vec4(rgbColor, 1.0);
