@@ -30,12 +30,13 @@ vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
 }
 
 // Copy of this: https://hturan.com/writing/complex-numbers-glsl
+// Updated to: alternating between all pink -> all blue 
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
   vec2 z = uv;
   
-  float angle = sin(u_time/5.) * 2. * PI;
-  float length = .2;
+  float angle = sin(u_time/6.) * 2. * PI;
+  float length = .3;
   
   // Spin our points in a circle of radius length
   float c = cos(angle);
@@ -52,7 +53,13 @@ void main() {
   // Extract the imaginary number
   float imaginary = log_p_over_q.y / PI;
 
-  vec3 col = palette( imaginary, vec3(0.50,.52,0.53), vec3(.46,.32,.35), vec3(.82,.84,.65), vec3(0.53,0.23,0.22));
+  vec3 col = palette( 
+    imaginary, 
+    vec3(sin(u_time / 1.8),.52,0.53), 
+    vec3(5.7,.32,.35), 
+    vec3(0.2,.84,.45), 
+    vec3(sin(u_time / 1.8),0.33,0.22)
+    );
 
   gl_FragColor = vec4(col, 1.0);
 }
