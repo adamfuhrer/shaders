@@ -57,33 +57,123 @@ vec2 b2 = vec2(-0.24, 0.31);
 vec2 b3 = vec2(-0.01, -0.42);
 
 void main() {
-    // Set up our imaginary plane
-    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
-    vec2 z = uv * 10.;
+  // Set up our imaginary plane
+  vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
+  vec2 z = uv * 10.;
 
-    // Calculate the sum of our first polynomial
-    vec2 polyA = a0
-        + cx_mul(a1, z)
-        + cx_mul(a2, cx_pow(z, sin(u_time)))
-        + cx_mul(a3, cx_pow(z, sin(u_time)));
+  vec2 polyA = a0
+    + cx_mul(a1, vec2(sin(u_time + z)))
+    + cx_mul(a2, vec2(sin(u_time * z)))
+    + cx_mul(a3, cx_pow(z, 2.0));
 
-    // Calculate the sum of our second polynomial
-    vec2 polyB = b0
-        + cx_mul(b1, z)
-        + cx_mul(b2, cx_pow(z, abs(u_time)))
-        + cx_mul(b3, cx_pow(z, abs(sin(u_time))));
+  // Calculate the sum of our second polynomial
+  vec2 polyB = b0
+      + cx_mul(b1, vec2(sin(u_time * z)))
+      + cx_mul(b2, vec2(sin(u_time * z)))
+      + cx_mul(b3, cx_pow(z, 2.));
 
-    // Calculate the ratio of our complex polynomials
-    vec2 result = cx_div(polyA, polyB);
+  // Calculate the ratio of our complex polynomials
+  vec2 result = cx_div(polyA, polyB);
 
-    float imaginary = cx_log(result).y;
-    float col = (imaginary / PI);
+  float imaginary = cx_log(result).y ;
+  // float col = (imaginary / PI);
 
-    gl_FragColor = vec4(
-      pal(col, 
-      vec3(.42,.45,.61),
-      vec3(abs(u_time),.42,.31),
-      vec3(.26,.30,.35),
-      vec3(.15,.4,.4)),
-      1.0);
+
+  // pink and blue
+  // vec3 col = pal( 
+  //   imaginary * 2., 
+  //   vec3(abs(sin(u_time / 1.8)),.59,0.93), 
+  //   vec3(0.2,0.12,.115), 
+  //   vec3(0.2,0.34,.115), 
+  //   vec3(abs(sin(u_time / 1.8)),1.13,.112)
+  //   );
+
+
+  // green / red
+  // vec4 col = vec4(
+  //   pal(imaginary, 
+  //   vec3(.52,.45,.61),
+  //   vec3(.40,.42,.31),
+  //   vec3(.26,.30,.35),
+  //   vec3(.15,.4,.4)),
+  //   1.0);
+
+  // red/pink and blue
+  // vec4 col = vec4(
+  // pal(imaginary, 
+  // vec3(.92,.25,.61),
+  // vec3(-1.,.42,.31),
+  // vec3(.26,.30,.35),
+  // vec3(.15,.4,.4)), 
+  // 1.0);
+
+  // blue / orange / pink / green
+  float a = 1.0;
+  vec4 col = vec4(
+  pal(imaginary, 
+  vec3(a,.25,.61),
+  vec3(a,.42,.31),
+  vec3(.26,.30,a),
+  vec3(.15,.4,a)),
+  1.0);
+
+
+  // green / yellow / red
+  // float a = 1.0;
+  // vec4 col = vec4(
+  // pal(imaginary, 
+  // vec3(a,.3,.11),
+  // vec3(a,.52,.31),
+  // vec3(.26,.30,a),
+  // vec3(.15,.4,a)),
+  // 1.0);
+
+  // float a = 1.0;
+  // vec4 col = vec4(
+  // pal(imaginary, 
+  // vec3(a,.3,.41),
+  // vec3(a,.52,.41),
+  // vec3(.26,.30,a),
+  // vec3(.15,.4,a)),
+  // 1.0);
+
+
+  // MISC
+  //   vec3 col = pal( 
+  // imaginary * 2., 
+  // vec3(abs(sin(u_time / 1.8)),.99,1.93), 
+  // vec3(0.2,0.0,.115), 
+  // vec3(0.2,0.1,.115), 
+  // vec3(abs(sin(u_time / 1.8)),0.13,1.112)
+  // );
+
+  // vec3 col = pal( 
+  //   imaginary * 2., 
+  //   vec3(abs(sin(u_time / 1.8)),.69,2.93), 
+  //   vec3(0.3,0.12,.115), 
+  //   vec3(0.3,0.34,.115), 
+  //   vec3(abs(sin(u_time / 1.8)),1.13,.112)
+  //   );
+
+  // vec3 col = pal( 
+  //   imaginary * 2., 
+  //   vec3(abs(sin(u_time / 1.8)),.79,0.93), 
+  //   vec3(0.4,0.12,.115), 
+  //   vec3(0.4,0.34,.115), 
+  //   vec3(abs(sin(u_time / 1.8)),0.93,.112)
+  //   );
+
+  // vec3 col = pal( 
+  //   imaginary * 2., 
+  //   vec3(abs(cos(u_time / 1.8)),0.11,0.33), 
+  //   vec3(0.3,0.12,0.115), 
+  //   vec3(0.3,0.94,0.1115), 
+  //   vec3(abs(cos(u_time / 1.8)),0.13,.2)
+  //   );
+
+  // old
+  // gl_FragColor = vec4(col, 1.0);
+  
+  gl_FragColor = col;
+
 }
