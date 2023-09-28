@@ -88,7 +88,6 @@ void main() {
   //   vec3(abs(sin(u_time / 1.8)),1.13,.112)
   //   );
 
-
   // green / red
   // vec4 col = vec4(
   //   pal(imaginary, 
