@@ -56,7 +56,7 @@ vec2 b1 = vec2(0.01, 0.23);
 vec2 b2 = vec2(-0.24, 0.31);
 vec2 b3 = vec2(-0.01, -0.42);
 
-
+// Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
 // iridescent windows
 void main() {
   // Set up our imaginary plane
