@@ -33,7 +33,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/19/shader.frag`)
+      fetch(`/iridescent-windows/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
