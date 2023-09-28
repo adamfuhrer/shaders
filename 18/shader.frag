@@ -56,6 +56,7 @@ vec2 b1 = vec2(0.01, 0.23);
 vec2 b2 = vec2(-0.24, 0.31);
 vec2 b3 = vec2(-0.01, -0.42);
 
+// Blending colors
 void main() {
   // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
