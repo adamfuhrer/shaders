@@ -2,16 +2,15 @@
 precision mediump float;
 #endif
 
-#define PI 3.14159265359
-
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-vec3 colorA = vec3(0.09, 0.22, 0.02);
-vec3 colorB = vec3(0.8, 0.57, 0.68);
+// vec3 colorA = vec3(0.16);
+// vec3 colorB = vec3(0.64, 0.78, 0.26);
+vec3 colorA = vec3(0.16);
+vec3 colorB = vec3(0.64, 0.78, 0.26);
 
-// https://thebookofshaders.com/10/
 float random (vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
 }
@@ -31,22 +30,23 @@ vec3 rgb2hsb( in vec3 c ){
               q.x);
 }
 
-// rainbow
+
+// blue, white
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = res * 100.0;
+  vec2 heightAmount = res * 3.0;
   vec2 heightAmountInteger = floor(heightAmount);
-  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 60.0));
+  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 960.0));
 
-  vec3 color = vec3(0.0);
+  vec3 color = vec3(0.75, 0.11, 0.11);
   vec3 pct = vec3(res.x);
-  pct.r = abs(sin(res.x * res.y * 112.0  + u_time+  random / 1.5));
-  pct.g = abs(cos(res.y  * 112.0* res.x  + u_time  * random / 1.5));
-  pct.b = abs(tan(res.x * res.y + u_time * random / 1.5));
+  pct.r = abs(tan(res.x * res.y + u_time * random / 1.5));
+  pct.g = abs(cos(res.x * res.y+ u_time * random / 1.5));
+  pct.b = abs(cos(res.x * res.y + u_time * random / 0.5));
 
   color = mix(colorA, colorB, pct);
-  // vec3 newColor = rgb2hsb(color);
+  vec3 newColor = rgb2hsb(color);
 
-  gl_FragColor = vec4(color,1.0);
+  gl_FragColor = vec4(newColor,1.0);
 }

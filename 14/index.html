@@ -6,6 +6,8 @@
     html, body {
       margin: 0;
       padding: 0;
+      /* overflow: hidden;
+      position: fixed; */
       width: 100%;
       height: 100%;
     }
@@ -30,7 +32,22 @@
       glslCanvas.setUniform('u_resolution', canvas.width, canvas.height);
     }
 
+    function handleMove(event) {
+      if(event.touches) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
+        const x = (touch.clientX - rect.left) * dpr;
+        const y = (touch.clientY - rect.top) * dpr;
+        glslCanvas.setUniform('u_mouse', x, y);
+      }
+      // event.preventDefault();
+
+    }
+
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
     window.addEventListener('resize', resizeCanvas);
+
     resizeCanvas();
   </script>
 </body>

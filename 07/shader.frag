@@ -6,8 +6,8 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-vec3 colorA = vec3(0.55, 0.96, 0.18);
-vec3 colorB = vec3(0.17, 0.07, 0.71);
+vec3 colorA = vec3(0.44, 0.78, 0.14);
+vec3 colorB = vec3(0.16, 0.12, 0.43);
 
 // https://thebookofshaders.com/10/
 float random (vec2 st) {
@@ -32,7 +32,7 @@ vec3 rgb2hsb( in vec3 c ){
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = res * 30.0;
+  vec2 heightAmount = res * 25.0;
   vec2 heightAmountInteger = floor(heightAmount);
   float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 2.0));
 
@@ -40,7 +40,7 @@ void main(){
   vec3 pct = vec3(res.x);
   pct.r = abs(sin(res.x + u_time * random / 1.5));
   pct.g = abs(cos(res.x + u_time * random / 1.5));
-  pct.b = abs(cos(res.x + u_time * random / 1.5));
+  pct.b = abs(tan(res.x + u_time * random / 1.5));
 
   color = mix(colorA, colorB, pct);
   vec3 newColor = rgb2hsb(color);

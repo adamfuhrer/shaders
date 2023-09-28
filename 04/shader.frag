@@ -12,14 +12,14 @@ vec3 colorA = vec3(0.38, 0.18, 0.96);
 vec3 colorB = vec3(0.89, 0.07, 0.07);
 
 // https://thebookofshaders.com/10/
-float random(vec2 st) {
+float random (vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*
         43758.5453123);
 }
 
-// https://thebookofshaders.com/06/
-vec3 rgb2hsb(in vec3 c){
+// Green to beige glitch gradients
+vec3 rgb2hsb( in vec3 c ){
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
     vec4 p = mix(vec4(c.bg, K.wz),
                  vec4(c.gb, K.xy),
@@ -37,19 +37,14 @@ vec3 rgb2hsb(in vec3 c){
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
 
-  vec2 h = floor(res * 20.0);
-  float random2 = random(vec2(h.y));
-  float height = clamp(random2 * 100.0, 1.0, 60.0);
-
-  vec2 heightAmount = res + height ;
-  vec2 heightAmountInteger = floor(heightAmount);
+  vec2 heightAmountInteger = floor(res * 28.0);
   float random = random(vec2(heightAmountInteger.y));
 
   vec3 color = vec3(0.0);
   vec3 pct = vec3(res.x);
   pct.r = smoothstep(0.0,1.0, random);
   pct.g = smoothstep(0.0,1.0, random);
-  pct.b = pow(abs(cos(res.x + u_time * random / 1.0)),0.1);
+  pct.b = pow(abs(cos(res.x + u_time * random / 0.8)),0.1);
 
   color = mix(colorA, colorB, pct);
   vec3 newColor = rgb2hsb(color);

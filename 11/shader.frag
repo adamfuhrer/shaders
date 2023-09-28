@@ -31,19 +31,24 @@ vec3 rgb2hsb( in vec3 c ){
 }
 
 
-// blue, white
+// fading squares
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = res * 3.0;
+  vec2 heightAmount = res * 200.0;
+  // vec2 heightAmountInteger = heightAmount;
   vec2 heightAmountInteger = floor(heightAmount);
-  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 960.0));
+  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 10.0));
 
-  vec3 color = vec3(0.75, 0.11, 0.11);
+  vec3 color = vec3(0.28, 0.01, 0.01);
   vec3 pct = vec3(res.x);
-  pct.r = abs(tan(res.x * res.y + u_time * random / 1.5));
-  pct.g = abs(cos(res.x * res.y+ u_time * random / 1.5));
-  pct.b = abs(cos(res.x * res.y + u_time * random / 0.5));
+  // pct.r = abs(atan(res.y * res.x + u_time * random / 1.5));
+  // pct.g = abs(atan(res.y * res.x+ u_time * random / 1.5));
+  // pct.b = abs(atan(res.x * res.x + u_time * random / 1.5));
+
+  pct.r = abs(acos(res.y / res.x *res.y *res.y * res.x  + u_time * random / 10.5));
+  pct.g = abs(asin(res.y / res.x * res.y *res.y * res.x + u_time * random / 14.5));
+  pct.b = abs(atan( res.y / res.x *  res.y + u_time * random /10.5));
 
   color = mix(colorA, colorB, pct);
   vec3 newColor = rgb2hsb(color);

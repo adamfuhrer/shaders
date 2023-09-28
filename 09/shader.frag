@@ -2,12 +2,14 @@
 precision mediump float;
 #endif
 
+#define PI 3.14159265359
+
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-vec3 colorA = vec3(0.44, 0.78, 0.14);
-vec3 colorB = vec3(0.79, 0.05, 0.41);
+vec3 colorA = vec3(0.09, 0.22, 0.02);
+vec3 colorB = vec3(0.8, 0.57, 0.68);
 
 // https://thebookofshaders.com/10/
 float random (vec2 st) {
@@ -29,23 +31,22 @@ vec3 rgb2hsb( in vec3 c ){
               q.x);
 }
 
-
-// pink, purple, blue
+// rainbow
 void main(){
 	vec2 res = gl_FragCoord.xy/u_resolution;
   
-  vec2 heightAmount = res * 60.0;
+  vec2 heightAmount = res * 100.0;
   vec2 heightAmountInteger = floor(heightAmount);
-  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 960.0));
+  float random = random(vec2(heightAmountInteger.x + heightAmountInteger.y * 60.0));
 
   vec3 color = vec3(0.0);
   vec3 pct = vec3(res.x);
-  pct.r = abs(sin(res.x * res.y  + u_time * random / 1.5));
-  pct.g = abs(cos(res.y * res.x + u_time * random / 1.5));
+  pct.r = abs(sin(res.x * res.y * 112.0  + u_time+  random / 1.5));
+  pct.g = abs(cos(res.y  * 112.0* res.x  + u_time  * random / 1.5));
   pct.b = abs(tan(res.x * res.y + u_time * random / 1.5));
 
   color = mix(colorA, colorB, pct);
-  vec3 newColor = rgb2hsb(color);
+  // vec3 newColor = rgb2hsb(color);
 
-  gl_FragColor = vec4(newColor,1.0);
+  gl_FragColor = vec4(color,1.0);
 }
