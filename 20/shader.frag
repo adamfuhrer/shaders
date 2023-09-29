@@ -68,34 +68,34 @@ void main() {
   vec2 z = uv * 10.;
 
   vec2 heightAmount = (uv + 1.0) * 21.0;
-  vec2 heightAmountInteger = heightAmount;
+  vec2 heightAmountInteger = floor(heightAmount);
   float r = random(vec2(heightAmountInteger.x  + heightAmountInteger.y  * 100.));
 
   vec2 polyA = a0
     + cx_mul(a1, vec2(atan(u_time + z ) * 20.))
-    + cx_mul(a2, vec2(cos(u_time  + z)*20.))
+    + cx_mul(a2, vec2(cos(u_time  + z)*2.))
     + cx_mul(a3, cx_pow(z, 2.0));
 
   // Calculate the sum of our second polynomial
   vec2 polyB = b0
-      + cx_mul(b1, vec2(atan(u_time * 3. + z)* 20.))
-      + cx_mul(b2, vec2(sin(u_time  * 2.+ z)* 12.))
-      + cx_mul(b3, cx_pow(z, 2.));
+      + cx_mul(b1, vec2(atan(u_time * 3. + z)* 2.))
+      + cx_mul(b2, vec2(sin(u_time  * 2.+ z)* 10.))
+      + cx_mul(b3, cx_pow(z , 2.));
 
   // Calculate the ratio of our complex polynomials
   vec2 result = cx_div(polyA, polyB);
 
-  float imaginary = cx_log(result).x;
-  // float imaginary = cx_log(result).y * cx_log(result).x;
+  // float imaginary = cx_log(result).y;
+  float imaginary = cx_log(result).y ;
 
   // blue / orange / pink / green
-  float a = 1.0;
+  float a = 0.7;
   vec4 col = vec4(
   pal(imaginary, 
   vec3(a,.25,.11),
   vec3(a,.42,.11),
-  vec3(.3,.30,a),
-  vec3(.5,.4,a)),
+  vec3(.2,.30,a),
+  vec3(.2,.2,a)),
   1.0);
 
   gl_FragColor = col;
