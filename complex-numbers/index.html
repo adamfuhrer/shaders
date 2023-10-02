@@ -33,7 +33,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/20/shader.frag`)
+      fetch(`/complex-numbers/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
