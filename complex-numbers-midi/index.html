@@ -22,17 +22,14 @@
   <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
   <canvas id="canvas"></canvas>
   <script>
+    // Canvas
     const canvas = document.querySelector('#canvas');
     const sandbox = new GlslCanvas(canvas);
     const dpr = window.devicePixelRatio || 1;
 
+    // MIDI
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-
-    function onMIDIFailure() {
-      console.error('Failed to connect');
-    }
-
-    let volume = 500;
+    let volume = 300;
     let lastUpdate = 0;
     const updateThreshold = 1000; // adjust for responsiveness
 
@@ -40,8 +37,12 @@
       console.log('MIDI Access Object', midiAccess);
       const inputs = midiAccess.inputs.values();
       for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-        input.value.onmidimessage = onMIDIMessage;
+        input.value.onmidimessage = handleMIDIMessage;
       }
+    }
+
+    function onMIDIFailure() {
+      console.error('Failed to connect');
     }
 
     function handleMIDIMessage(event) {
@@ -62,11 +63,7 @@
       sandbox.setUniform('u_width', volume);
     }
 
-    function onMIDIMessage(event) {
-      const humanReadableInfo = handleMIDIMessage(event);
-    }
-
-    function resizeCanvas() {
+    function handleResizeCanvas() {
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       sandbox.setUniform('u_resolution', canvas.width, canvas.height);
@@ -77,6 +74,7 @@
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
+          sandbox.setUniform('u_width', volume);
         });
     });
 
@@ -100,9 +98,9 @@
     canvas.addEventListener('touchstart', handleMove);
     canvas.addEventListener('touchmove', handleMove);
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', handleResizeCanvas);
 
-    resizeCanvas();
+    handleResizeCanvas();
   </script>
 </body>
 </html>
