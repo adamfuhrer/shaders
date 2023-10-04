@@ -19,5 +19,15 @@
   <body>
     <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
     <canvas class="glslCanvas" data-fragment-url="/04/shader.frag" width="800" height="800"></canvas>
+
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
   </body>
 </html>

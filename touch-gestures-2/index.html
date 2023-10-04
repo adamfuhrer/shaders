@@ -57,6 +57,16 @@
       sandbox.setUniform('u_pointer', x, y);
     }
 
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
+
     canvas.addEventListener('mousemove', handleMove);
     canvas.addEventListener('touchstart', handleMove);
     canvas.addEventListener('touchmove', handleMove);

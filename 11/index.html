@@ -29,6 +29,16 @@
       canvas.height = window.innerHeight * dpr;
       glslCanvas.setUniform('u_resolution', canvas.width, canvas.height);
     }
+    
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
