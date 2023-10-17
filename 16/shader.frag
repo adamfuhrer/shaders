@@ -44,7 +44,9 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
 {
     return a + b*cos(2.*PI*(c*t+d));
 }
-
+float random (vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
+}
 // Define our points
 vec2 a0 = vec2(0.32, -0.45);
 vec2 a1 = vec2(-0.49, -0.32);
@@ -52,49 +54,47 @@ vec2 a2 = vec2(-0.31, 0.38);
 vec2 a3 = vec2(-0.12, 0.04);
 
 vec2 b0 = vec2(-0.71, 0.53);
-vec2 b1 = vec2(.01, 0.23);
-vec2 b2 = vec2(-0.24, 0.31);
-vec2 b3 = vec2(-0.01, -0.42);
-
-float random (vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);
-}
+vec2 b1 = vec2(0.01, 1.23);
+vec2 b2 = vec2(-0.24, 1.31);
+vec2 b3 = vec2(-1.01, -0.42);
 
 // Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
-// fire
+// iridescent windows
 void main() {
   // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
   vec2 z = uv * 10.;
 
-  vec2 heightAmount = (uv + 1.0) * 21.0;
-  vec2 heightAmountInteger = floor(heightAmount);
-  float r = random(vec2(heightAmountInteger.x  + heightAmountInteger.y  * 100.));
-
+  a3.y = cos(u_time / 2.);
+  a3.x = sin(u_time / 2.);
+  
+    b1.y = cos(u_time / 2.);
+  b1.x = sin(u_time / 2.);
   vec2 polyA = a0
-    + cx_mul(a1, vec2(atan(u_time + z ) * 20.))
-    + cx_mul(a2, vec2(cos(u_time  + z)*2.))
-    + cx_mul(a3, cx_pow(z, 2.0));
+    + cx_mul(a1, vec2(atan(u_time) * 32.))
+    + cx_mul(a2, vec2(cos(u_time* 2.  )*10. ))
+    + cx_mul(a3, cx_pow(z, 3.0));
 
   // Calculate the sum of our second polynomial
   vec2 polyB = b0
-      + cx_mul(b1, vec2(atan(u_time * 3. + z)* 2.))
-      + cx_mul(b2, vec2(sin(u_time  * 2.+ z)* 10.))
-      + cx_mul(b3, cx_pow(z , 2.));
+      + cx_mul(b1, vec2(cos(u_time + z)* 2.))
+      + cx_mul(b2, vec2(cos(u_time )* 2.))
+      + cx_mul(b3, cx_pow(z, 2.));
 
   // Calculate the ratio of our complex polynomials
   vec2 result = cx_div(polyA, polyB);
 
-  // float imaginary = cx_log(result).y;
-  float imaginary = cx_log(result).y ;
+  float imaginary = cx_log(result).y;
+  // float imaginary = cx_log(result).y * cx_log(result).x;
 
-  float a = 0.7;
+  // blue / orange / pink / green
+  float a = 1.0;
   vec4 col = vec4(
-  pal(imaginary, 
-  vec3(a,.25,.11),
-  vec3(a,.42,.11),
-  vec3(.2,.30,a),
-  vec3(.2,.2,a)),
+  pal(imaginary / 2., 
+  vec3(a,.25,.61),
+  vec3(a,.42,.31),
+  vec3(.26,.30,a),
+  vec3(.15,.4,a)),
   1.0);
 
   gl_FragColor = col;
