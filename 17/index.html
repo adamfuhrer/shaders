@@ -1,0 +1,78 @@
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>WebGL</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.querySelector('#canvas');
+    const sandbox = new GlslCanvas(canvas);
+    const dpr = window.devicePixelRatio || 1;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      sandbox.setUniform('u_resolution', canvas.width, canvas.height);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch(`/17/shader.frag`)
+        .then(res => res.text())
+        .then(fragmentText => {
+          sandbox.load(fragmentText);
+        });
+    });
+
+    function handleMove(event) {
+      let x, y;
+      const rect = canvas.getBoundingClientRect();
+      
+      if(event.touches) {
+        const touch = event.touches[0];
+        x = (touch.clientX - rect.left) * dpr;
+        y = (touch.clientY - rect.top) * dpr;
+      } else {
+        x = (event.clientX - rect.left) * dpr;
+        y = (event.clientY - rect.top) * dpr;
+      }
+
+      sandbox.setUniform('u_pointer', x, y);
+    }
+
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
+
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchstart', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+  </script>
+</body>
+</html>
