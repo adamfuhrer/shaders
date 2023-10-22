@@ -59,12 +59,10 @@ vec2 b2 = vec2(-0.24, 1.31);
 vec2 b3 = vec2(-1.01, -0.42);
 
 // Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
-// iridescent windows
 void main() {
-  // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
   // vec2 z = uv * u_time * 10.;
-  vec2 z = uv *  10.;
+  vec2 z = uv *  6.;
 
   a1.y = sin(u_time );
   a1.x = cos(u_time );
@@ -73,35 +71,34 @@ void main() {
   a3.x = sin(u_time / 2.);
   
   a2.y = atan(u_time * 3. );
+  b2.x = sin(u_time / 2.);
 
   b1.y = cos(u_time / 2.);
   b1.x = sin(u_time / 4.);
 
   b3.y = cos(u_time / 2.);
-  b2.x = atan(u_time / 2.);
   b3.y = sin(u_time / 2.);
+  
 
   vec2 polyA = a0
     + cx_mul(a1, vec2(sin(u_time+ z)))
     + cx_mul(a2, vec2(sin(u_time)  ))
     + cx_mul(a3, cx_pow(z, cos(z.x / 2000. )));
 
-  // Calculate the sum of our second polynomial
   vec2 polyB = b0
-      + cx_mul(b1, vec2(sin(u_time)))
-      + cx_mul(b2, vec2(sin(u_time)))
-      + cx_mul(b3, cx_pow(z, sin(z.y / 20000. )));
+      + cx_mul(b1, vec2(cos(u_time)))
+      + cx_mul(b2, vec2( z   /1129.))
+      + cx_mul(b3, cx_pow(z , sin(z.y / 2000. )));
 
-  // Calculate the ratio of our complex polynomials
   vec2 result = cx_div(polyA, polyB);
 
-  float imaginary = cx_log(result).y ;
+  float imaginary = cx_log(result).x  ;
   // float imaginary = cx_log(result).y * cx_log(result).x;
 
-  // green / yellow / red
+  // rainbow
   float a = 1.66;
   vec4 col = vec4(
-  pal(imaginary / 3.00, 
+  pal(imaginary / 2.00, 
   vec3(a,.9,0.3),
   vec3(a,-.7,.91),
   vec3(.8,.90,a),

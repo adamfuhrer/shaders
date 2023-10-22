@@ -34,7 +34,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/22/shader.frag`)
+      fetch(`/shader-experiments-2/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);

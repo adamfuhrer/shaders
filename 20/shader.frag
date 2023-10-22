@@ -59,7 +59,6 @@ vec2 b2 = vec2(-0.24, 1.31);
 vec2 b3 = vec2(-1.01, -0.42);
 
 // Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
-// iridescent windows
 void main() {
   // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
