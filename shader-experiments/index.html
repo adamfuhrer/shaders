@@ -30,7 +30,6 @@
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       sandbox.setUniform('u_resolution', canvas.width, canvas.height);
-      sandbox.setUniform('u_blurAmount', 10);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

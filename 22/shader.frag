@@ -63,7 +63,7 @@ void main() {
   // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - .5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
   // vec2 z = uv * u_time * 10.;
-  vec2 z = uv *  80.;
+  vec2 z = uv *  6.;
 
   a1.y = sin(u_time );
   a1.x = cos(u_time );
@@ -83,27 +83,24 @@ void main() {
   vec2 polyA = a0
     + cx_mul(a1, vec2(sin(u_time + z)))
     + cx_mul(a2, vec2(sin(u_time)  ))
-    + cx_mul(a3, cx_pow(z / 10., tan(z.y / 2000. )));
+    + cx_mul(a3, cx_tan(z ));
 
-  // Calculate the sum of our second polynomial
   vec2 polyB = b0
       + cx_mul(b1, vec2(sin(u_time )))
       + cx_mul(b2, vec2(10.))
-      + cx_mul(b3, cx_pow(z / 190., sin(z.x / 2000. )));
+      + cx_mul(b3, cx_pow(z / 19., sin(z.y / 2000. )));
 
-  // Calculate the ratio of our complex polynomials
   vec2 result = cx_div(polyA, polyB);
 
   float imaginary = cx_log(result).y;
   // float imaginary = cx_log(result).y * cx_log(result).x;
 
-  // green / yellow / red
   float a = 0.99;
   vec4 col = vec4(
-  pal(imaginary * 2., 
-  vec3(a,.8,0.55),
-  vec3(a,.2,-.40),
-  vec3(.7,.40,a),
+  pal(imaginary / 2., 
+  vec3(a,.2,0.55),
+  vec3(a,.7,.40),
+  vec3(.2,-.40,a),
   vec3(.20,.3,a)),
   1.0);
 
