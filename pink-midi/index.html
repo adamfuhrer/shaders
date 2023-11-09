@@ -1,0 +1,176 @@
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>WebGL</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.querySelector('#canvas');
+    const sandbox = new GlslCanvas(canvas);
+    const dpr = window.devicePixelRatio || 1;
+
+
+    // MIDI
+    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+    let volume = 300;
+    let lastUpdate = 0;
+    const updateThreshold = 1000; // adjust for responsiveness
+
+    function onMIDISuccess(midiAccess) {
+      console.log('MIDI Access Object', midiAccess);
+      const inputs = midiAccess.inputs.values();
+      for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+        input.value.onmidimessage = handleMIDIMessage;
+      }
+    }
+
+    function onMIDIFailure() {
+      console.error('Failed to connect');
+    }
+
+    function handleMIDIMessage(event) {
+      let midiData = processMIDIMessage(event);
+      console.log(midiData)
+      // midiData["7"].value
+      
+      sandbox.setUniform('u_1',  midiData["1"].value);
+      sandbox.setUniform('u_2',  midiData["2"].value);
+      sandbox.setUniform('u_3',  midiData["3"].value);
+      sandbox.setUniform('u_4',  midiData["4"].value);
+      sandbox.setUniform('u_5',  midiData["5"].value);
+      sandbox.setUniform('u_6',  midiData["6"].value);
+      sandbox.setUniform('u_7',  midiData["7"].value);
+    }
+
+    const midiData = {
+      "1": { value: 1, lower: 1, upper: 10 },
+      "2": { value: 1, lower: 1, upper: 4 },
+      "3": { value: 1, lower: 1, upper: 2 },
+      "4": { value: 1, lower: 1, upper: 2 },
+      "5": { value: 1, lower: 0, upper: 127 },
+      "6": { value: 1, lower: 0, upper: 127 },
+      "7": { value: 1, lower: 1, upper: 8 },
+      "8": { value: 1, lower: 0, upper: 127 },
+      "9": { value: 1, lower: 0, upper: 127 },
+      "10": { value: 1, lower: 0, upper: 127 },
+      "11": { value: 1, lower: 0, upper: 127 },
+      "12": { value: 1, lower: 0, upper: 127 },
+      "13": { value: 1, lower: 0, upper: 127 },
+      "14": { value: 1, lower: 0, upper: 127 },
+      "15": { value: 1, lower: 0, upper: 127 },
+      "16": { value: 1, lower: 0, upper: 127 },
+      "17": { value: 1, lower: 0, upper: 127 },
+      "18": { value: 1, lower: 0, upper: 127 },
+      "19": { value: 1, lower: 0, upper: 127 },
+      "20": { value: 1, lower: 0, upper: 127 },
+      "21": { value: 1, lower: 0, upper: 127 },
+      "22": { value: 1, lower: 0, upper: 127 },
+      "23": { value: 1, lower: 0, upper: 127 },
+      "24": { value: 1, lower: 0, upper: 127 },
+      "25": { value: 1, lower: 0, upper: 127 },
+      "26": { value: 1, lower: 0, upper: 127 },
+      "27": { value: 1, lower: 0, upper: 127 },
+      "28": { value: 1, lower: 0, upper: 127 },
+      "29": { value: 1, lower: 0, upper: 127 },
+      "30": { value: 1, lower: 0, upper: 127 },
+      "31": { value: 1, lower: -64, upper: 63 },
+      "32": { value: 1, lower: 0, upper: 127 },
+      "33": { value: 1, lower: 0, upper: 127 },
+      "34": { value: 1, lower: 0, upper: 127 },
+      "35": { value: 1, lower: 0, upper: 127 },
+      "36": { value: 1, lower: 0, upper: 127 },
+      "37": { value: 1, lower: 0, upper: 127 },
+    };
+
+    function mapRange(value, low1, high1, low2, high2) {
+      return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
+    }
+
+    function processMIDIMessage(event) {
+      const ccNumber = event.data[1].toString();
+      const ccValue = event.data[2];
+
+      if (midiData.hasOwnProperty(ccNumber)) {
+        const control = midiData[ccNumber];
+        const mappedValue = mapRange(ccValue, 0, 127, control.lower, control.upper);
+        control.value = mappedValue;
+      } else {
+        console.warn(`CC number ${ccNumber} is out of range and not defined in the midiData object.`);
+      }
+
+      return midiData;
+    }
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      sandbox.setUniform('u_resolution', canvas.width, canvas.height);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch(`/pink-midi/shader.frag`)
+        .then(res => res.text())
+        .then(fragmentText => {
+          sandbox.load(fragmentText);
+
+          sandbox.setUniform('u_1', 1.);
+          sandbox.setUniform('u_2', 1.);
+          sandbox.setUniform('u_3', 1.);
+          sandbox.setUniform('u_7', 1.);
+
+        });
+    });
+
+    function handleMove(event) {
+      let x, y;
+      const rect = canvas.getBoundingClientRect();
+      
+      if(event.touches) {
+        const touch = event.touches[0];
+        x = (touch.clientX - rect.left) * dpr;
+        y = (touch.clientY - rect.top) * dpr;
+      } else {
+        x = (event.clientX - rect.left) * dpr;
+        y = (event.clientY - rect.top) * dpr;
+      }
+
+      sandbox.setUniform('u_pointer', x, y);
+    }
+
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
+
+    canvas.addEventListener('mousemove', handleMove);
+    canvas.addEventListener('touchstart', handleMove);
+    canvas.addEventListener('touchmove', handleMove);
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+  </script>
+</body>
+</html>
