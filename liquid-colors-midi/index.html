@@ -26,7 +26,6 @@
     const sandbox = new GlslCanvas(canvas);
     const dpr = window.devicePixelRatio || 1;
 
-
     // MIDI
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
     let volume = 300;
@@ -48,15 +47,15 @@
     function handleMIDIMessage(event) {
       let midiData = processMIDIMessage(event);
       console.log(midiData)
-      // midiData["7"].value
-      
-      sandbox.setUniform('u_1',  midiData["1"].value);
-      sandbox.setUniform('u_2',  midiData["2"].value);
-      sandbox.setUniform('u_3',  midiData["3"].value);
-      sandbox.setUniform('u_4',  midiData["4"].value);
-      sandbox.setUniform('u_5',  midiData["5"].value);
-      sandbox.setUniform('u_6',  midiData["6"].value);
-      sandbox.setUniform('u_7',  midiData["7"].value);
+      sandbox.setUniform('u_1', midiData["1"].value);
+      sandbox.setUniform('u_2', midiData["2"].value);
+      sandbox.setUniform('u_3', midiData["3"].value);
+      sandbox.setUniform('u_7', midiData["7"].value);
+
+      console.log(midiData["19"].value)
+      sandbox.setUniform('u_19', midiData["19"].value);
+      sandbox.setUniform('u_20', midiData["20"].value);
+      sandbox.setUniform('u_21', midiData["21"].value);
     }
 
     const midiData = {
@@ -72,15 +71,15 @@
       "10": { value: 1, lower: 0, upper: 127 },
       "11": { value: 1, lower: 0, upper: 127 },
       "12": { value: 1, lower: 0, upper: 127 },
-      "13": { value: 1, lower: 0, upper: 127 },
+      "13": { value: 1, lower: 0, upper: 1 },
       "14": { value: 1, lower: 0, upper: 127 },
       "15": { value: 1, lower: 0, upper: 127 },
       "16": { value: 1, lower: 0, upper: 127 },
       "17": { value: 1, lower: 0, upper: 127 },
       "18": { value: 1, lower: 0, upper: 127 },
-      "19": { value: 1, lower: 0, upper: 127 },
-      "20": { value: 1, lower: 0, upper: 127 },
-      "21": { value: 1, lower: 0, upper: 127 },
+      "19": { value: 1, lower: 0, upper: 1 },
+      "20": { value: 1, lower: 0, upper: 1 },
+      "21": { value: 1, lower: 0, upper: 1 },
       "22": { value: 1, lower: 0, upper: 127 },
       "23": { value: 1, lower: 0, upper: 127 },
       "24": { value: 1, lower: 0, upper: 127 },
@@ -125,7 +124,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/pink-midi/shader.frag`)
+      fetch(`/liquid-colors-midi/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
@@ -133,6 +132,11 @@
           sandbox.setUniform('u_1', 1.);
           sandbox.setUniform('u_2', 1.);
           sandbox.setUniform('u_3', 1.);
+
+          sandbox.setUniform('u_19', 1.);
+          sandbox.setUniform('u_20', 1.);
+          sandbox.setUniform('u_21', 1.);
+
           sandbox.setUniform('u_7', 1.);
 
         });
