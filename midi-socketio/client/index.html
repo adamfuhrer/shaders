@@ -20,11 +20,30 @@
 </head>
 <body>
   <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+
   <canvas id="canvas"></canvas>
   <script>
     const canvas = document.querySelector('#canvas');
     const sandbox = new GlslCanvas(canvas);
     const dpr = window.devicePixelRatio || 1;
+    let socket;
+
+    // Socket.io
+    document.addEventListener('DOMContentLoaded', () => {
+      socket = io('http://localhost:3000');
+    
+      // Server need to be running
+      socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      // Listen for messages from the server
+      socket.on('message', (data) => {
+        console.log('Message received from server: ', data);
+        setUniformValues(data);
+      });
+    });
 
     // MIDI
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
@@ -42,10 +61,17 @@
     }
 
     function handleMIDIMessage(event) {
-      let midiData = processMIDIMessage(event);
+      const midiData = processMIDIMessage(event);
+
+      // Emit the message for the other connected clients
+      socket.emit('message', midiData);
+
+      // Set the uniforms for the current shader
+      setUniformValues(midiData)
+    }
+
+    function setUniformValues(midiData) {
       console.log(midiData)
-      // midiData["7"].value
-      
       sandbox.setUniform('u_1',  midiData["1"].value);
       sandbox.setUniform('u_2',  midiData["2"].value);
       sandbox.setUniform('u_3',  midiData["3"].value);
@@ -121,7 +147,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/liquid-pink-midi/shader.frag`)
+      fetch(`/midi-socketio/client/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
@@ -130,7 +156,6 @@
           sandbox.setUniform('u_2', 1.);
           sandbox.setUniform('u_3', 1.);
           sandbox.setUniform('u_7', 1.);
-
         });
     });
 

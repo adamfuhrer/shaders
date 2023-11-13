@@ -28,9 +28,6 @@
 
     // MIDI
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-    let volume = 300;
-    let lastUpdate = 0;
-    const updateThreshold = 1000; // adjust for responsiveness
 
     function onMIDISuccess(midiAccess) {
       console.log('MIDI Access Object', midiAccess);
