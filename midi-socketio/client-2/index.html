@@ -20,7 +20,7 @@
 </head>
 <body>
   <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="http://99.239.22.45:3000/socket.io/socket.io.js"></script>
 
   <canvas id="canvas"></canvas>
   <script>
@@ -31,7 +31,7 @@
 
     // Socket.io
     document.addEventListener('DOMContentLoaded', () => {
-      socket = io('http://localhost:3000');
+      socket = io('http://99.239.22.45:3000');
     
       // Server need to be running
       socket.on('connect', () => {
@@ -147,7 +147,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      fetch(`/midi-socketio/client/shader.frag`)
+      fetch(`/midi-socketio/client-2/shader.frag`)
         .then(res => res.text())
         .then(fragmentText => {
           sandbox.load(fragmentText);
