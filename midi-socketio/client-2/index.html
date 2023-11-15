@@ -20,7 +20,7 @@
 </head>
 <body>
   <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
-  <script src="http://99.239.22.45:3000/socket.io/socket.io.js"></script>
+  <script src="https://99.239.22.45:3000/socket.io/socket.io.js"></script>
 
   <canvas id="canvas"></canvas>
   <script>
@@ -31,7 +31,7 @@
 
     // Socket.io
     document.addEventListener('DOMContentLoaded', () => {
-      socket = io('http://99.239.22.45:3000');
+      socket = io('https://99.239.22.45:3000');
     
       // Server need to be running
       socket.on('connect', () => {
@@ -44,31 +44,6 @@
         setUniformValues(data);
       });
     });
-
-    // MIDI
-    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-
-    function onMIDISuccess(midiAccess) {
-      console.log('MIDI Access Object', midiAccess);
-      const inputs = midiAccess.inputs.values();
-      for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-        input.value.onmidimessage = handleMIDIMessage;
-      }
-    }
-
-    function onMIDIFailure() {
-      console.error('Failed to connect');
-    }
-
-    function handleMIDIMessage(event) {
-      const midiData = processMIDIMessage(event);
-
-      // Emit the message for the other connected clients
-      socket.emit('message', midiData);
-
-      // Set the uniforms for the current shader
-      setUniformValues(midiData)
-    }
 
     function setUniformValues(midiData) {
       console.log(midiData)
