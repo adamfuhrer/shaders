@@ -1,0 +1,151 @@
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>WebGL</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.querySelector('#canvas');
+    const sandbox = new GlslCanvas(canvas);
+    const dpr = window.devicePixelRatio || 1;
+
+    // MIDI
+    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+
+    function onMIDISuccess(midiAccess) {
+      console.log('MIDI Access Object', midiAccess);
+      const inputs = midiAccess.inputs.values();
+      for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+        input.value.onmidimessage = handleMIDIMessage;
+      }
+    }
+
+    function onMIDIFailure() {
+      console.error('Failed to connect');
+    }
+
+    function handleMIDIMessage(event) {
+      let midiData = processMIDIMessage(event);
+      console.log(midiData)
+      sandbox.setUniform('u_1', midiData["1"].value);
+      sandbox.setUniform('u_2', midiData["2"].value);
+      sandbox.setUniform('u_3', midiData["3"].value);
+      sandbox.setUniform('u_4', midiData["4"].value);
+      sandbox.setUniform('u_5', midiData["5"].value);
+      sandbox.setUniform('u_6', midiData["6"].value);
+    }
+
+    const midiData = {
+      "1": { value: 0.91, lower: 0, upper: 1 },
+      "2": { value: 0.14, lower: 0, upper: 1 },
+      "3": { value: 0.69, lower: 0, upper: 1 },
+      "4": { value: 1.0, lower: 0, upper: 1 },
+      "5": { value: 0.45, lower: 0, upper: 1 },
+      "6": { value: 0.22, lower: 0, upper: 1 },
+      "7": { value: 1, lower: 1, upper: 8 },
+      "8": { value: 1, lower: 0, upper: 127 },
+      "9": { value: 1, lower: 0, upper: 127 },
+      "10": { value: 1, lower: 0, upper: 127 },
+      "11": { value: 1, lower: 0, upper: 127 },
+      "12": { value: 1, lower: 0, upper: 127 },
+      "13": { value: 1, lower: 0, upper: 1 },
+      "14": { value: 1, lower: 0, upper: 127 },
+      "15": { value: 1, lower: 0, upper: 127 },
+      "16": { value: 1, lower: 0, upper: 127 },
+      "17": { value: 1, lower: 0, upper: 127 },
+      "18": { value: 1, lower: 0, upper: 127 },
+      "19": { value: 1, lower: 0, upper: 1 },
+      "20": { value: 1, lower: 0, upper: 1 },
+      "21": { value: 1, lower: 0, upper: 1 },
+      "22": { value: 1, lower: 0, upper: 127 },
+      "23": { value: 1, lower: 0, upper: 127 },
+      "24": { value: 1, lower: 0, upper: 127 },
+      "25": { value: 1, lower: 0, upper: 127 },
+      "26": { value: 1, lower: 0, upper: 127 },
+      "27": { value: 1, lower: 0, upper: 127 },
+      "28": { value: 1, lower: 0, upper: 127 },
+      "29": { value: 1, lower: 0, upper: 127 },
+      "30": { value: 1, lower: 0, upper: 127 },
+      "31": { value: 1, lower: -64, upper: 63 },
+      "32": { value: 1, lower: 0, upper: 127 },
+      "33": { value: 1, lower: 0, upper: 127 },
+      "34": { value: 1, lower: 0, upper: 127 },
+      "35": { value: 1, lower: 0, upper: 127 },
+      "36": { value: 1, lower: 0, upper: 127 },
+      "37": { value: 1, lower: 0, upper: 127 },
+    };
+
+    function mapRange(value, low1, high1, low2, high2) {
+      return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
+    }
+
+    function processMIDIMessage(event) {
+      const ccNumber = event.data[1].toString();
+      const ccValue = event.data[2];
+
+      if (midiData.hasOwnProperty(ccNumber)) {
+        const control = midiData[ccNumber];
+        const mappedValue = mapRange(ccValue, 0, 127, control.lower, control.upper);
+        control.value = mappedValue;
+      } else {
+        console.warn(`CC number ${ccNumber} is out of range and not defined in the midiData object.`);
+      }
+
+      return midiData;
+    }
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      sandbox.setUniform('u_resolution', canvas.width, canvas.height);
+    }
+
+    async function loadFile(url) {
+      const response = await fetch(url);
+      return await response.text();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const fragmentText = await loadFile(`/gradient-editor/shader.frag`)
+      sandbox.load(fragmentText);
+      sandbox.setUniform('u_1', 0.91);
+      sandbox.setUniform('u_2', 0.14);
+      sandbox.setUniform('u_3', 0.69);
+      sandbox.setUniform('u_4', 1.0);
+      sandbox.setUniform('u_5', 0.45);
+      sandbox.setUniform('u_6', 0.22);
+    });
+
+    function fullscreen(event) {
+      const d = document.documentElement;
+      if (d.requestFullscreen) {
+        d.requestFullscreen();
+      } else if (d.webkitRequestFullScreen) {
+        d.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    };
+    document.body.addEventListener("dblclick", fullscreen);
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+  </script>
+</body>
+</html>
