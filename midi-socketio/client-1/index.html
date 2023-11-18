@@ -20,7 +20,8 @@
 </head>
 <body>
   <script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
-  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="https://localhost:3000/socket.io/socket.io.js"></script>
+  <!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
 
   <canvas id="canvas"></canvas>
   <script>
@@ -31,7 +32,7 @@
 
     // Socket.io
     document.addEventListener('DOMContentLoaded', () => {
-      socket = io('http://localhost:3000');
+      socket = io('https://localhost:3000',{ rejectUnauthorized: false});
     
       // Server need to be running
       socket.on('connect', () => {
