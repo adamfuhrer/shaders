@@ -47,32 +47,32 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
 
 // Define our points
 vec2 a0 = vec2(0.42, -0.45);
-vec2 a1 = vec2(-.49, -0.32);
+vec2 a1 = vec2(-1.49, -0.32);
 vec2 a2 = vec2(-0.31, 0.38);
 vec2 a3 = vec2(-0.22, 0.04);
 
 vec2 b0 = vec2(-0.71, 0.3);
-vec2 b1 = vec2(0.01, 0.23);
+vec2 b1 = vec2(0.01, 1.23);
 vec2 b2 = vec2(-0.24, 0.21);
-vec2 b3 = vec2(-0.01, -1.42);
+vec2 b3 = vec2(-1.01, -1.42);
 
 // Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
 // iridescent windows
 void main() {
   // Set up our imaginary plane
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
-  vec2 z = uv * 10.;
+  vec2 z = uv * 9.;
 
   vec2 polyA = a0
     + cx_mul(a1, vec2(cos(u_time + z) * 2.))
-    + cx_mul(a2, vec2(sin(u_time + z)* 2.))
+    + cx_mul(a2, vec2(sin(u_time)* 2.))
     + cx_mul(a3, cx_pow(z, 3.0));
 
   // Calculate the sum of our second polynomial
   vec2 polyB = b0
       + cx_mul(b1, vec2(sin(u_time + z)* 2.))
       + cx_mul(b2, vec2(atan(u_time + z)* 2.))
-      + cx_mul(b3, cx_pow(z, 3.));
+      + cx_mul(b3, cx_pow(z, 2.));
 
   // Calculate the ratio of our complex polynomials
   vec2 result = cx_div(polyA, polyB);
@@ -81,12 +81,12 @@ void main() {
   // float imaginary = cx_log(result).y * cx_log(result).x;
 
   // blue / orange / pink / green
-  float a = 1.0;
+  float a = 1.2;
   vec4 col = vec4(
   pal(imaginary, 
-  vec3(a,.35,.51),
+  vec3(a,.35,.61),
   vec3(a,.42,.31),
-  vec3(.16,.30,a),
+  vec3(.16,.35,a),
   vec3(.25,.4,a)),
   1.0);
 
