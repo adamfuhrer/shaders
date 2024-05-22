@@ -67,7 +67,7 @@ void main() {
 
   vec2 polyB = b0
       + cx_mul(b1, vec2(atan(z + u_time / 2.)))
-      + cx_mul(b2, vec2(tan(z)))
+      + cx_mul(b2, vec2(tan(z / 2.))) // divided by 2. gets rid of weird lines 
       + cx_mul(b3, cx_pow(z, 16.));
 
   vec2 result = cx_div(polyA, polyB);
