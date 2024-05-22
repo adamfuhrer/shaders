@@ -45,45 +45,53 @@ vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
     return a + b*cos(2.*PI*(c*t+d));
 }
 
-// Define our points
 vec2 a0 = vec2(0.32, -0.45);
 vec2 a1 = vec2(-0.49, -0.32);
-vec2 a2 = vec2(-0.31, 0.38);
-vec2 a3 = vec2(-0.22, 0.04);
+vec2 a2 = vec2(-0.71, 0.53);
+vec2 a3 = vec2(-0.12, 0.04);
 
 vec2 b0 = vec2(-0.71, 0.53);
 vec2 b1 = vec2(0.01, 0.23);
 vec2 b2 = vec2(-0.24, 0.31);
-vec2 b3 = vec2(-0.01, -0.42);
+vec2 b3 = vec2(-0.12, 0.04);
 
 // Most code by Harley Turan: https://hturan.com/writing/complex-numbers-glsl
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
-  vec2 z = uv * 10.;
+  vec2 z = uv * 3.;
 
   vec2 polyA = a0
-    + cx_mul(a1, vec2(cos(u_time + z) * 2.))
-    + cx_mul(a2, vec2(sin(u_time + z)* 2.))
-    + cx_mul(a3, cx_pow(z, 2.0));
+    + cx_mul(a1, vec2(atan(z / u_time  / 1.5)))
+    + cx_mul(a2, vec2(cos(z + u_time / 1.5)))
+    + cx_mul(a3, cx_pow(z, 14.0));
 
   vec2 polyB = b0
-      + cx_mul(b1, vec2(sin(u_time + z)* 2.))
-      + cx_mul(b2, vec2(atan(u_time + z)* 2.))
-      + cx_mul(b3, cx_pow(z, 2.));
+      + cx_mul(b1, vec2(atan(z + u_time / 2.)))
+      + cx_mul(b2, vec2(tan(z)))
+      + cx_mul(b3, cx_pow(z, 16.));
 
   vec2 result = cx_div(polyA, polyB);
 
-  float imaginary = cx_log(result).y;
+  float imaginary =  cx_log(result).y / 1.9;
 
-  // blue / orange / pink / green
-  float a = 1.0;
+  // float a = 1.0;
+  // vec4 col = vec4(
+  // pal(imaginary, 
+  // vec3(a,.25,.61),
+  // vec3(a,.42,.31),
+  // vec3(.26,.30,a),
+  // vec3(.15,.4,a)),
+  // 1.0);
+
+  float a = .85;
   vec4 col = vec4(
   pal(imaginary, 
-  vec3(a,.25,.61),
+  vec3(a,.25,.21),
   vec3(a,.42,.31),
   vec3(.26,.30,a),
-  vec3(.15,.4,a)),
+  vec3(.05,.4,a)),
   1.0);
 
   gl_FragColor = col;
+
 }
