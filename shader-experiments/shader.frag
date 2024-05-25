@@ -94,13 +94,22 @@ void main() {
   float imaginary = cx_log(result).y ;
 
   // rainbow
-  float a = 1.66;
+  // float a = 1.66;
+  // vec4 col = vec4(
+  // pal(imaginary / 3.00, 
+  // vec3(a,.9,0.3),
+  // vec3(a,-.7,.91),
+  // vec3(.8,.90,a),
+  // vec3(-.55,-.3,a)),
+  // 1.0);
+
+    float a = 1.0;
   vec4 col = vec4(
-  pal(imaginary / 3.00, 
-  vec3(a,.9,0.3),
-  vec3(a,-.7,.91),
-  vec3(.8,.90,a),
-  vec3(-.55,-.3,a)),
+  pal(imaginary, 
+  vec3(a,.35,.51),
+  vec3(a,.42,.31),
+  vec3(.26,.30,a),
+  vec3(.05,.4,a)),
   1.0);
 
   gl_FragColor = col;
